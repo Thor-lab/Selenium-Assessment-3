@@ -9,9 +9,8 @@ import io.cucumber.testng.CucumberOptions;
 @CucumberOptions( 
 		tags = {"@signup"},
 		glue = {"stepdefs"}, 
-//		plugin = {"html:target/cucumber-reports/SignIn/cucumber-pretty",
-//				"json:target/json-cucumber-reports/signin/cukejson.json",
-//				"testng:target/testng-cucumber-reports/HomePage/cuketestng.xml" }, 
+				plugin = {"html:target/cucumber-reports/cucumber-pretty","json:target/json-cucumber-reports/default/cukejson.json",
+		"testng:target/testng-cucumber-reports/cuketestng.xml" },
 		features = {"src/test/resources/features/SignUpPage"})
 
 public class SignUpRunner extends AbstractTestNGCucumberParallelTests{

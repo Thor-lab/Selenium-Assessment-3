@@ -13,7 +13,7 @@ public class Signinpage {
 	webconnector wc=new webconnector();
 
 	public void appIsLoaded() throws Exception {
-		String URL=wc.getSpecificColumnData("./src/test/testdata/data.xlsx","sheet1", "URL", "");
+		String URL=wc.getSpecificColumnData("./src/test/testdata/data.xlsx","sheet1", "URL", "row1");
 		driver.get(URL);
 		wc.waitForCondition("PageLoad","",60);
 		wc.verify("Equals", "My Store", wc.driverCommand("GetPageTitle"));

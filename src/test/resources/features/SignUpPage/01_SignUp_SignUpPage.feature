@@ -1,5 +1,6 @@
 Feature: Create Users
 
+  @signup 
   Scenario: Create users
     Given I am on Website
     When I click sign in button

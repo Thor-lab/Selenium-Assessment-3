@@ -14,7 +14,7 @@ public class SignUpPage {
 	webconnector wc=new webconnector();
 
 	public void enterTextInEmailAddressField() throws Exception {
-		String userEmail=wc.getSpecificColumnData("./src/test/testdata/data.xlsx","sheet3", "Email Address", "First User");
+		String userEmail=wc.getSpecificColumnData("./src/test/testdata/signupData.xlsx","sheet1", "Email Address", "First User");
 		wc.PerformActionOnElement("EmailAddressField_SignUpPage", "Type", userEmail);
 	}
 
@@ -77,28 +77,39 @@ public class SignUpPage {
 			case "Mobile phone":
 				element="MobilePhone_YourAddressSection";
 				break;
-			case "Address Alia":
+			case "Address Alias":
 				element="AddressAlias_YourAddressSection";
 				break;
 			default:
 				throw new IllegalArgumentException("Feild \"" + fieldName + "\" doesn't exist.");
 			}
-			if(fieldName== "City" || fieldName== "Country") {
+			if(fieldName== "State" || fieldName== "Country") {
 
-				String fieldValue=wc.getSpecificColumnData("./src/test/testdata/data.xlsx","sheet3", fieldName, rowNum);
+				String fieldValue=wc.getSpecificColumnData("./src/test/testdata/signupData.xlsx","sheet1", fieldName, rowNum);
 				Select dropdown = new Select(wc.FindAnElement(element)); 
-			      dropdown.selectByValue(fieldValue);
+			      dropdown.selectByValue("21");
 				
 			//	wc.PerformActionOnElement(element, "Type", fieldValue);
 			}
+			else if(fieldName== "Postal Code" || fieldName== "Mobile phone") {
+				String fieldValue=wc.getSpecificColumnData("./src/test/testdata/signupData.xlsx","sheet1", fieldName, rowNum);
+				fieldValue=fieldValue.replaceAll("\"", "");
+				wc.PerformActionOnElement(element, "Type", fieldValue);
+			}
 			else {
-				String fieldValue=wc.getSpecificColumnData("./src/test/testdata/data.xlsx","sheet3", fieldName, rowNum);
+				String fieldValue=wc.getSpecificColumnData("./src/test/testdata/signupData.xlsx","sheet1", fieldName, rowNum);
 				wc.PerformActionOnElement(element, "Type", fieldValue);
 			}
 	}
+		
+		public void clickOnSignOutButton() throws Exception{
+			wc.PerformActionOnElement("SignOut_HomePage", "Click", "");
+		}
 		public void clickRegisterButton() throws Exception {
 			wc.PerformActionOnElement("SubmitButton_SignUpPage", "Click", "");
+			
 		}
+		
 		
 		public void verifyWarningMessage() throws Exception {
 			wc.PerformActionOnElement("WarningForInvalidPhoneNumber_SignUpPage", "WaitForElementDisplay", null);

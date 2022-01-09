@@ -7,6 +7,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -48,43 +53,30 @@ public class webconnector<V> {
 			e.printStackTrace();
 		}
 	}
-	//	public WebDriver getDriver() {
-	//		return this.getDriver();
-	//	}
-	//
-	//	public void setDriver(WebDriver driver){
-	//		this.driver=driver;
-	//	}
 
 	public void setUpDriver(){
 
-		System.setProperty("webdriver.chrome.driver","./src/test/lib/chromedriver2.exe");
-		ChromeOptions chromeOptions = new ChromeOptions();
-		chromeOptions.addArguments("start-maximized");
-		//session = ((ChromeDriver)driver).getSessionId();
-		driver = new ChromeDriver(chromeOptions);
-
-		//		String browser = prop.getProperty("browser");
-		//		if (browser == null) {
-		//			browser = "chrome";
-		//		}
-		//		switch (browser) {
-		//		case "chrome":
-		//			System.setProperty("webdriver.chrome.driver","./src/test/lib/chromedriver2.exe");
-		//			ChromeOptions chromeOptions = new ChromeOptions();
-		//			chromeOptions.addArguments("start-maximized");
-		//			//session = ((ChromeDriver)driver).getSessionId();
-		//			driver = new ChromeDriver(chromeOptions);
-		//			break;
-		//		case "firefox":
-		//			System.setProperty("webdriver.gecko.driver","./src/test/lib/geckodriver.exe");
-		//			driver = new FirefoxDriver();
-		//			driver.manage().window().maximize();
-		//			//session = ((FirefoxDriver)driver).getSessionId();
-		//			break;
-		//		default:
-		//			throw new IllegalArgumentException("Browser \"" + browser + "\" isn't supported.");
-		//		}
+		String browser = prop.getProperty("browser");
+		if (browser == null) {
+			browser = "chrome";
+		}
+		switch (browser) {
+		case "chrome":
+			System.setProperty("webdriver.chrome.driver","./src/test/lib/chromedriver2.exe");
+			ChromeOptions chromeOptions = new ChromeOptions();
+			chromeOptions.addArguments("start-maximized");
+			//session = ((ChromeDriver)driver).getSessionId();
+			driver = new ChromeDriver(chromeOptions);
+			break;
+		case "firefox":
+			System.setProperty("webdriver.gecko.driver","./src/test/lib/geckodriver.exe");
+			driver = new FirefoxDriver();
+			driver.manage().window().maximize();
+			//session = ((FirefoxDriver)driver).getSessionId();
+			break;
+		default:
+			throw new IllegalArgumentException("Browser \"" + browser + "\" isn't supported.");
+		}
 	}
 
 	public void closeDriver(Scenario scenario){
@@ -104,58 +96,46 @@ public class webconnector<V> {
 		ExpectedConditions.jsReturnsValue("return document.readyState==\"complete\";");
 	}
 
-	/*
-	 * public String getSpecificColumnData(String FilePath, String SheetName, String
-	 * ColumnName) throws InvalidFormatException, IOException { FileInputStream fis
-	 * = new FileInputStream(FilePath); XSSFWorkbook workbook = new
-	 * XSSFWorkbook(fis); XSSFSheet sheet = workbook.getSheet(SheetName); XSSFRow
-	 * row = sheet.getRow(0); int col_num = -1; for(int i=0; i <
-	 * row.getLastCellNum(); i++) {
-	 * if(row.getCell(i).getStringCellValue().trim().equals(ColumnName)) col_num =
-	 * i; } row = sheet.getRow(1); XSSFCell cell = row.getCell(col_num); String
-	 * value = cell.getStringCellValue(); fis.close();
-	 * System.out.println("Value of the Excel Cell is - "+ value); return value; }
-	 */
-	
-public String getSpecificColumnData(String FilePath, String SheetName, String ColumnName, String RowNum) throws InvalidFormatException, IOException {
-		
+
+	public String getSpecificColumnData(String FilePath, String SheetName, String ColumnName, String RowNum) throws InvalidFormatException, IOException {
 		DataFormatter formatter = new DataFormatter();
 		FileInputStream fis = new FileInputStream(FilePath);
 		XSSFWorkbook workbook = new XSSFWorkbook(fis);
 		XSSFSheet sheet = workbook.getSheet(SheetName);
 		XSSFRow row1 = sheet.getRow(0);
 		int col_num = -1;
+		int row_num=1;
 		for(int i=0; i < row1.getLastCellNum(); i++)
 		{
 			if(row1.getCell(i).getStringCellValue().trim().equals(ColumnName))
 				col_num = i;
 		}
-		
-		int row_num=1;
-		
-		for (Row row : sheet) {
-		    for (Cell cell : row) {
-		       // CellReference cellRef = new CellReference(row.getRowNum(), cell.getColumnIndex());
-
-		        // get the text that appears in the cell by getting the cell value and applying any data formats (Date, 0.00, 1.23e9, $1.23, etc)
-		        String text = formatter.formatCellValue(cell);
-		       // String text = row.cell().getStringCellValue()
-
-		        // is it an exact match?
-		        if (RowNum.equals(text)) {
-		           row_num= row.getRowNum();
-		        }
-		        
-		    }
+		if (RowNum=="row1") {
+			row_num=1;
 		}
-		row1 = sheet.getRow(row_num);
+		else {
+			for (Row row : sheet) {
+				for (Cell cell : row) {
+
+					// get the text that appears in the cell by getting the cell value and applying any data formats (Date, 0.00, 1.23e9, $1.23, etc)
+					String text = formatter.formatCellValue(cell);
+					// String text = row.cell().getStringCellValue()
+
+					// is it an exact match?
+					if (RowNum.equals(text)) {
+						row_num= row.getRowNum();
+					}
+
+				}
+			}
+		}
+		row1 = sheet.getRow(1);
 		XSSFCell cell = row1.getCell(col_num);
 		String value = cell.getStringCellValue();
 		fis.close();
 		System.out.println("Value of the Excel Cell is - "+ value);    	 
 		return value;
 	}
-
 
 	public void setSpecificColumnData(String FilePath, String SheetName, String ColumnName) throws IOException{
 		FileInputStream fis;
@@ -198,7 +178,7 @@ public String getSpecificColumnData(String FilePath, String SheetName, String Co
 
 	public By getElementWithLocator(String WebElement) throws Exception {
 		String locatorTypeAndValue = prop.getProperty(WebElement);
-		String[] locatorTypeAndValueArray = locatorTypeAndValue.split(",");
+		String[] locatorTypeAndValueArray = locatorTypeAndValue.split(",", 2);
 		String locatorType = locatorTypeAndValueArray[0].trim();
 		String locatorValue = locatorTypeAndValueArray[1].trim();
 		switch (locatorType.toUpperCase()) {
@@ -292,8 +272,6 @@ public String getSpecificColumnData(String FilePath, String SheetName, String Co
 			throw new IllegalArgumentException("wait For Condition \"" + TypeOfWait + "\" isn't supported.");
 		}
 	}
-
-
 	public String driverCommand(String Command) {
 		switch (Command) {
 		case "GetPageTitle":
@@ -302,7 +280,6 @@ public String getSpecificColumnData(String FilePath, String SheetName, String Co
 			throw new IllegalArgumentException("Command \"" + Command + "\" isn't supported.");
 		}
 	}
-
 
 	public void verify(String AssertionType, String Text1, String Text2) {
 		switch (AssertionType)

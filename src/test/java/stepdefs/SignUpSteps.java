@@ -22,6 +22,7 @@ import io.cucumber.java.en.When;
 public class SignUpSteps extends webconnector{
 	private SignUpPage signUpPage;
 	private Homepage homepage;
+	private Signinpage signInPage;
 	private Checkoutpage checkoutpage;
 	private Orderhistorypage orderhistorypage;
 	private String scenDesc;
@@ -30,6 +31,7 @@ public class SignUpSteps extends webconnector{
 
 	public SignUpSteps(){
 		this.signUpPage = new SignUpPage();
+		this.signInPage= new Signinpage();
 	}
 
 	@Before
@@ -52,7 +54,7 @@ public class SignUpSteps extends webconnector{
 	public void enterUserDetails(DataTable table) throws Exception {
 		this.signUpPage.enterTextInEmailAddressField();
 		this.signUpPage.clickOnCreateAnAccountButton();
-		
+
 		ArrayList<String> fields=new ArrayList<String>();
 		fields.add("First Name");
 		fields.add("Last Name");
@@ -66,23 +68,40 @@ public class SignUpSteps extends webconnector{
 		fields.add("Postal Code");
 		fields.add("Country");
 		fields.add("Mobile phone");
+		fields.add("Address Alias");
 		int userCount= table.cells().size();
 		for(int i=0; i<userCount; i++ ) {
-			for (String x:fields) {
-				this.signUpPage.enterPersonalInformationOnCreateAnAccountButton(table.cell(i,0), x);
-			}
+			/*
+			 * for (String x:fields) {
+			 * this.signUpPage.enterPersonalInformationOnCreateAnAccountButton(table.cell(i,
+			 * 0), x); }
+			 */
+
+			this.signUpPage.enterPersonalInformationOnCreateAnAccountButton(table.cell(i,0), "First Name");
+			this.signUpPage.enterPersonalInformationOnCreateAnAccountButton(table.cell(i,0), "Last Name");
+			this.signUpPage.enterPersonalInformationOnCreateAnAccountButton(table.cell(i,0), "Password");
+			this.signUpPage.enterPersonalInformationOnCreateAnAccountButton(table.cell(i,0), "Frist Name Address");
+			this.signUpPage.enterPersonalInformationOnCreateAnAccountButton(table.cell(i,0), "Last Name Address");
+			this.signUpPage.enterPersonalInformationOnCreateAnAccountButton(table.cell(i,0), "Address");
+			this.signUpPage.enterPersonalInformationOnCreateAnAccountButton(table.cell(i,0), "City");
+			this.signUpPage.enterPersonalInformationOnCreateAnAccountButton(table.cell(i,0), "State");
+			this.signUpPage.enterPersonalInformationOnCreateAnAccountButton(table.cell(i,0), "Postal Code");
+			this.signUpPage.enterPersonalInformationOnCreateAnAccountButton(table.cell(i,0), "Country");
+			this.signUpPage.enterPersonalInformationOnCreateAnAccountButton(table.cell(i,0), "Mobile phone");
+			this.signUpPage.enterPersonalInformationOnCreateAnAccountButton(table.cell(i,0), "Address Alias");
+			this.signUpPage.clickRegisterButton();
+			this.signInPage.loggedIn();
+			this.signUpPage.clickOnSignOutButton();
 		}
-		
-		
 		/*this.signUpPage.enterTextInEmailAddressField();
 		this.signUpPage.clickOnCreateAnAccountButton();
 	//	this.signUpPage.enterPersonalInformationOnCreateAnAccountButton("First Name", data.get(1).get(1));
-*/	}
+		 */	}
 
 	@When("I click register button")
 	public void clickOnRegister() throws Exception {
 		this.signUpPage.clickRegisterButton();
-	    
+
 	}
 
 	/*
@@ -90,11 +109,11 @@ public class SignUpSteps extends webconnector{
 	 * i_am_successfully_registered() { // Write code here that turns the phrase
 	 * above into concrete actions throw new cucumber.api.PendingException(); }
 	 */
-	
+
 	@Then("I get Warning message")
 	public void warningMessageIsDisplayed() throws Exception {
-	    this.signUpPage.verifyWarningMessage();
+		this.signUpPage.verifyWarningMessage();
 	}
-	
-	
+
+
 }

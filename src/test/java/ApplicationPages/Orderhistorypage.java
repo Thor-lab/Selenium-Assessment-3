@@ -7,15 +7,15 @@ import java.io.IOException;
 
 public class Orderhistorypage extends Checkoutpage{
 	webconnector wc=new webconnector();
-	public String getCurrentOrderDetailsUnderOrderHistoryPage(String tableSection) throws Exception {
+	public String getCurrentOrderDetailsUnderOrderHistorypage(String tableSection) throws Exception {
 		if (tableSection.equals("Order reference")) {
-			return wc.PerformGetTextActionOnElement("currentOrderDetails_OrderHistoryPage" + "1]", "GetText");
+			return wc.PerformGetTextActionOnElement("currentOrderReference_OrderHistoryPage" , "GetText");
 		}
 		if (tableSection.equals("Date")) {
-			return wc.PerformGetTextActionOnElement("currentOrderDetails_OrderHistoryPage" + "2]", "GetText");
+			return wc.PerformGetTextActionOnElement("currentOrderDate_OrderHistoryPage", "GetText");
 		}
 		if (tableSection.equals("Total price")) {
-			return wc.PerformGetTextActionOnElement("currentOrderDetails_OrderHistoryPage" + "3]", "GetText");
+			return wc.PerformGetTextActionOnElement("currentOrderTotalPrice_OrderHistoryPage", "GetText");
 		}
 		else {
 			return null;
@@ -33,9 +33,9 @@ public class Orderhistorypage extends Checkoutpage{
 //		String ExpectedOrderID=getOrderReferenceNumberFromPaymentPage();
 //		String expectedItemPrice= getTotalItemPriceOnTshirtPage();
 		String expectedOrderDate= wc.getSystemDate();
-		String orderId = getCurrentOrderDetailsUnderOrderHistoryPage("Order reference");
-		String itemPrice=getCurrentOrderDetailsUnderOrderHistoryPage("Total price");
-		String orderPlacedDate=getCurrentOrderDetailsUnderOrderHistoryPage("Date");
+		String orderId = getCurrentOrderDetailsUnderOrderHistorypage("Order reference");
+		String itemPrice=getCurrentOrderDetailsUnderOrderHistorypage("Total price");
+		String orderPlacedDate=getCurrentOrderDetailsUnderOrderHistorypage("Date");
 		wc.verify("Equals",orderId, referenceId);
 		wc.verify("Equals", itemPrice, expectedItemPrice);
 		wc.verify("Equals", orderPlacedDate, expectedOrderDate);

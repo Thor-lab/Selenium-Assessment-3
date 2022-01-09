@@ -38,6 +38,7 @@ public class Checkoutpage {
 	}
 
 	public String getTotalItemPriceOnTshirtPage() throws Exception {
+		wc.PerformActionOnElement("TotalItemPrice_TshirtPage", "WaitForElementDisplay","");
 		return wc.PerformGetTextActionOnElement("TotalItemPrice_TshirtPage", "GetText");
 	}
 
